@@ -57,8 +57,7 @@ from errno import EALREADY, EINPROGRESS, EWOULDBLOCK, ECONNRESET, EINVAL, \
      ENOTCONN, ESHUTDOWN, EISCONN, EBADF, ECONNABORTED, EPIPE, EAGAIN, \
      errorcode
 
-_DISCONNECTED = frozenset({ECONNRESET, ENOTCONN, ESHUTDOWN, ECONNABORTED, EPIPE,
-                           EBADF})
+_DISCONNECTED = frozenset({ECONNRESET, ENOTCONN, ESHUTDOWN, ECONNABORTED, EPIPE, EBADF})
 
 try:
     socket_map
@@ -187,7 +186,7 @@ def poll2(timeout=0.0, map=None):
                 continue
             readwrite(obj, flags)
 
-poll3 = poll2                           # Alias for backward compatibility
+poll3 = poll2   # Alias for backward compatibility
 
 def loop(timeout=30.0, use_poll=False, map=None, count=None):
     if map is None:
@@ -293,9 +292,7 @@ class dispatcher:
         try:
             self.socket.setsockopt(
                 socket.SOL_SOCKET, socket.SO_REUSEADDR,
-                self.socket.getsockopt(socket.SOL_SOCKET,
-                                       socket.SO_REUSEADDR) | 1
-                )
+                self.socket.getsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR) | 1)
         except OSError:
             pass
 
@@ -317,7 +314,7 @@ class dispatcher:
 
     def listen(self, num):
         self.accepting = True
-        if os.name == 'nt' and num > 5:
+        if os.name == 'nt' and num > 5: #windos操作系统
             num = 5
         return self.socket.listen(num)
 
@@ -329,8 +326,7 @@ class dispatcher:
         self.connected = False
         self.connecting = True
         err = self.socket.connect_ex(address)
-        if err in (EINPROGRESS, EALREADY, EWOULDBLOCK) \
-        or err == EINVAL and os.name == 'nt':
+        if err in (EINPROGRESS, EALREADY, EWOULDBLOCK) or err == EINVAL and os.name == 'nt':
             self.addr = address
             return
         if err in (0, EISCONN):
